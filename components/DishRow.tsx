@@ -1,19 +1,28 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { FC, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Currency from "react-currency-formatter";
 import { urlfor } from "../sanity";
 import { MinusCircleIcon, PlusCircleIcon } from "react-native-heroicons/solid";
-
-export interface IDishRow {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-}
+import { addToBasket, removeFromBasket } from "../redux/basket/basket.slice";
+import { IDishRow } from "../redux/basket/basket.interface";
+import { IRootState } from "../redux/root-state.interface";
 
 const DishRow: FC<IDishRow> = ({ id, name, description, price, image }) => {
+  const dispatch = useDispatch();
+  const items = useSelector((state: IRootState) =>
+    state.basket.items.filter((item) => item.id === id)
+  );
+
   const [isPressed, setIsPressed] = useState<boolean>(false);
+
+  const addItemToBasket = () => {
+    dispatch(addToBasket({ id, name, description, price, image }));
+  };
+
+  const removeItemFromBasket = () => {
+    if (items.length) dispatch(removeFromBasket({ id }));
+  };
 
   return (
     <>
@@ -45,13 +54,19 @@ const DishRow: FC<IDishRow> = ({ id, name, description, price, image }) => {
       {isPressed && (
         <View className="bg-white px-4">
           <View className="flex-row items-center space-x-2 pb-3">
-            <TouchableOpacity>
-              <MinusCircleIcon color="#00ccbb" size={40} />
+            <TouchableOpacity
+              disabled={!items.length}
+              onPress={removeItemFromBasket}
+            >
+              <MinusCircleIcon
+                color={items.length ? "#00ccbb" : "gray"}
+                size={40}
+              />
             </TouchableOpacity>
 
-            <Text>0</Text>
+            <Text>{items.length || 0}</Text>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={addItemToBasket}>
               <PlusCircleIcon color="#00ccbb" size={40} />
             </TouchableOpacity>
           </View>

@@ -4,21 +4,9 @@ import { StarIcon } from "react-native-heroicons/solid";
 import { MapPinIcon } from "react-native-heroicons/outline";
 import { urlfor } from "../sanity";
 import { useNavigation } from "@react-navigation/native";
+import { IRestaurant } from "../redux/restaurant/restaurant.interface";
 
-interface IRestaurantCard {
-  id: number;
-  imgUrl: string;
-  title: string;
-  rating: number;
-  genre: string;
-  address: string;
-  short_description: string;
-  dishes: never[];
-  long: number;
-  lat: number;
-}
-
-const RestaurantCard: FC<IRestaurantCard> = ({
+const RestaurantCard: FC<IRestaurant> = ({
   id,
   imgUrl,
   title,
