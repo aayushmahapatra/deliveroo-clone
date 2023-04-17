@@ -11,6 +11,8 @@ const BasketIcon = () => {
     state.basket.items.reduce((total, item) => (total += item.price), 0)
   );
 
+  if (!items.length) return null;
+
   return (
     <View className="absolute bottom-10 w-full z-20">
       <TouchableOpacity
